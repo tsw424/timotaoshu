@@ -81,24 +81,21 @@ let redisData = {
         * 用user重置下tokne的值
         * */
         reSetToken: async (user, token) => {
-            let date = new Date().getTime();
-            let jwtToken = jwt.encode(user, key + date) + date;
-            // let token = sha1(jwtToken);
-            client.set(token, jwtToken)
-            client.expire(token, 60*60*24*30);  //  缓存30天
-            return true;
+            return redisData.token.setToken(user, token);
         },
         /*
         * 用token换取user
         * 若没有user则返回空
         * */
         getUser: async (token) => {
+            let userId = null;
             let jwtTokenStr = await new Promise(function(resolve, reject) {
                 client.get(token, function(err, reply) {
                     if(!reply) {
                         resolve("");
                         return;
                     }
+                    userId = reply;
                     client2.hget(reply, token, function(err, reply) {
                         resolve(reply?reply:'');
                     });
@@ -114,6 +111,10 @@ let redisData = {
                     user = jwt.decode(jwtToken, key + date);
                     return user;
                 } catch(err) {
+                    if(userId) {    //删除跟该token有关的值
+                        client.del(token, client.print);
+                        client2.hdel(userId, jwtTokenStr, client2.print);
+                    }
                     return "";
                 }
             } else {
@@ -142,8 +143,9 @@ let redisData = {
         },
         /*
         * 用user换取token
+        * 这里后期再考虑要不要使用Promise异步
         * */
-        setToken:async (user) => {
+        setToken:async (user, token) => {
 
             let date = new Date().getTime();
             /*
@@ -151,7 +153,7 @@ let redisData = {
              * 第二个参数，是key值
              * */
             let jwtToken = jwt.encode(user, key + date) + date;
-            let token = sha1(jwtToken);
+            token =  token || sha1(jwtToken);
             client.set(token, user.id)
             client.expire(token, 60*60*24*30);  //  缓存30天
             let obj = {};
