@@ -151,13 +151,13 @@ async function reptileCommon2(reptileType) {
             },
             getBookList: ($, url, bookName) => {
                 let list = [];
-                if(bookName && url.indexOf(returnObj.searchUrl(bookName) == -1)) {
+                if(bookName && returnObj.searchUrl(bookName).indexOf(url) == -1) {
                     //被302重定向，进入了书的详情页，多存在于只搜到了一本书
                     list.push({
-                        title:returnObj.bookTitle(),
+                        title:returnObj.bookTitle($),
                         url: (url.indexOf('http') == -1) ? (rule.baseUrl + url) : url,
-                        author:returnObj.bookAuthor(),
-                        status:returnObj.getUpdateTime()
+                        author:returnObj.bookAuthor($),
+                        status:returnObj.getUpdateTime($)
                     })
                 } else {
                     let domList = $(rule.searchList);
