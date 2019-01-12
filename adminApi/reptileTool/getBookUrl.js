@@ -27,6 +27,7 @@ async function getBookUrl_common(reptileType, bookName, isProxy){
             }
         };
 
+        //这个地方可以注释掉  决定是否使用代理
         if(isProxy && global.server) {
             option.proxy = global.serverProxy
         } else {
