@@ -1,12 +1,12 @@
 #### 案例网址：
 
-​	pc后台管理页面：http://106.12.37.138:9092
+​	pc后台管理页面：http://212.64.78.88:9092
 
     账号：火炎   密码：123456
 
     登录进去后，在权限管理里的职员管理，给自己新增一个账号，不然账号很容易被顶掉。
 
-​	h5移动端页面：http://106.12.37.138:1111/
+​	h5移动端页面：http://212.64.78.88:1111/
 
 #### 初衷：
 
@@ -103,7 +103,7 @@ h5主要用到的技术栈：
 
 ```
 拉取项目代码前
-请确保电脑上node版本是8.10.0以上
+请确保电脑上node版本是8.12.0以上
 请确保电脑上支持yarn
 请确保电脑上有mysql和redis
 ```
@@ -121,21 +121,21 @@ yarn install
 ##### 下载adminApi的node_modules包
 
 ```
-cd timotaoNew/adminApi
+cd timotaoshu/adminApi
 yarn install
 ```
 
 ##### 下载iview-admin的node_modules包
 
 ```
-cd timotaoNew/iview-admin
+cd timotaoshu/iview-admin
 yarn install
 ```
 
 ##### 下载h5的node_modules包
 
 ```
-cd timotaoNew/h5
+cd timotaoshu/h5
 yarn install
 ```
 
@@ -166,15 +166,15 @@ yarn install
 #### 5、跑项目（开发模式）
 
 ```
-cd timotaoNew/adminApi
+cd timotaoshu/adminApi
 npm run dev
 
 另开一个命令窗口
-cd timotaoNew/iview-admin
+cd timotaoshu/iview-admin
 npm run dev
 
 另开一个命令窗口
-cd timotaoNew/h5
+cd timotaoshu/h5
 npm run dev
 
 
@@ -189,15 +189,15 @@ npm run dev
 #### 6、部署项目
 
 ```
-cd timotaoNew/adminApi/bin
+cd timotaoshu/adminApi/bin
 pm2 start www
 
 另开一个窗口（部署pc后台管理的前端项目前，请先npm run dist生成vue静态文件）
-cd timotaoNew/iview-admin/server
+cd timotaoshu/iview-admin/server
 pm2 start server
 
 另开一个窗口
-cd timotaoNew/h5/bin
+cd timotaoshu/h5/bin
 pm2 start h5
 
 
