@@ -30,7 +30,7 @@ module.exports = merge(webpackBaseConfig, {
             minChunks: Infinity
         }),
         new HtmlWebpackPlugin({
-            title: '提莫淘书后台管理系统',
+            title: 'Token小说后台管理系统',
             filename: '../index.html',
             inject: false
         }),

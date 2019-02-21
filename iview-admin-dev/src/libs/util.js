@@ -6,7 +6,7 @@ import ajax from './ajax';
 let util = {
 };
 util.title = function (title) {
-    title = title || '提莫淘书后台管理';
+    title = title || 'Token小说后台管理';
     window.document.title = title;
 };
 

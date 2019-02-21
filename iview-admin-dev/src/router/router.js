@@ -86,8 +86,9 @@ export const appRouter = [
         component: Main,
         access:["5000"],
         children: [
-            { path: 'authorList', title: '作者分类', access:["5000"], name: 'type_authorList', component: () => import('@/views/type/authorList.vue') },
-            { path: 'bookTypeList', title: '小说分类', access:["5000"], name: 'type_bookTypeList', component: () => import('@/views/type/bookTypeList.vue') },
+            { path: 'authorList'    , title: '作者分类', access:["5000"], name: 'type_authorList'       , component: () => import('@/views/type/authorList.vue') },
+            { path: 'bookTypeList'  , title: '小说分类', access:["5000"], name: 'type_bookTypeList'     , component: () => import('@/views/type/bookTypeList.vue') },
+            { path: 'bannerList'    , title: 'banner',  access:["5000"],  name: 'bannerList'             , component: () => import('@/views/type/bannerList.vue') },
         ]
     },
     {

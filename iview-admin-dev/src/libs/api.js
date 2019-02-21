@@ -59,7 +59,10 @@ export default {
         authorList:'/type/authorList',
         bookTypeList:'/type/bookTypeList',
         updateAuthorList:'/type/updateAuthorList',
-        updateBookTypeList:'/type/updateBookTypeList'
+        updateBookTypeList:'/type/updateBookTypeList',
+
+        bannerList:'/type/bannerList',
+        editBanner:'/type/editBanner'
     },
     log:{
         download:'/log/download',
