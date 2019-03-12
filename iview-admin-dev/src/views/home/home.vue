@@ -28,20 +28,22 @@
                 </Col>
                 <Col span="12" class="tr">
                     <Button type="primary" :disabled="loading" @click="onClickSearch">搜索</Button>
+                    <Button type="primary" :disabled="loading" @click="onClickUpdateBookisJin">批量启用</Button>
                     <Button type="primary" :disabled="loading" @click="onClickOneKeyUpdateNewCatalog">一键全部更新至最新章节</Button>
-                <Button type="primary" :disabled="loading" @click="onclickOneKeyGetAllBookImg">一键跟新全部图片</Button>
+                    <Button type="primary" :disabled="loading" @click="onclickOneKeyGetAllBookImg">一键更新全部图片</Button>
                 </Col>
             </Row>
         </Card>
 
         <Card shadow>
-            <Table border highlight-row :loading="loading" :columns="columns" :data="books" ref="table" @on-row-dblclick="expandToggle" ></Table>
+            <Table border highlight-row :loading="loading" :columns="columns" :data="books" ref="table" @on-row-dblclick="expandToggle" @on-selection-change="onClickSelect" ></Table>
         </Card>
         <Card shadow>
             <Page :current="params.page" :page-size="params.limit" :total="total" show-total show-elevator @on-change="getBooks"></Page>
         </Card>
 
         <wb-img :img="bigImg.url" :right="bigImg.right" :top="bigImg.top"></wb-img>
+        <edit-book :edit="editStatus" :book-type-list="bookTypeList" ref="edit" @search="onClickSearch"></edit-book>
     </Layout>
 </template>
 
@@ -50,15 +52,23 @@ import util from 'util';
 import config from "config"
 import description from "./components/description";
 import wbImg from "./components/wb-img";
+import editBook from 'modal/home/editBook.vue';
 export default {
     name: 'home',
     components: {
         description,
-        wbImg
+        wbImg,
+        editBook
     },
     data () {
         return {
             columns: [
+                {
+                    type: 'selection',
+                    key:'selection',
+                    width: 60,
+                    align: 'center'
+                },
                 {
                     title: 'id',
                     key: 'id',
@@ -242,6 +252,18 @@ export default {
                                     }
                                 }
                             }, params.row.bookStatus == "1" ? `更新到最新章节`:`已经是最新章节`),
+                            h("a", {
+                                attrs: {
+                                    href:"javascript:void(0);",
+                                    style:`margin-left:10px;`
+                                },
+                                on:{
+                                    click: (e) =>{
+                                        // this.$router.push("/reptile-tool/channel");
+                                        this.showEdit(params.row);
+                                    }
+                                },
+                            }, `编辑`),
                             h('a', {
                                 attrs:{
                                     href:'javascript:void(0);',
@@ -354,7 +376,12 @@ export default {
             },
             bookTypeList:[],
             bookType:'',
-            reptileList:{length:0}
+            reptileList:{length:0},
+
+            editStatus:{
+                status:false
+            },
+            selection:[]
         };
     },
     computed: {},
@@ -392,6 +419,10 @@ export default {
                 this.books = data.book;
                 this.total = data.count;
                 this.loading = false;
+
+                this.$nextTick(() => {  //当dom发生变化后，执行打勾
+                    this.$refs.table.selectAll(true);
+                });
             }).catch((err) => {
                 this.loading = false;
             });
@@ -542,6 +573,9 @@ export default {
             };
             util.post.type.bookTypeList(obj).then((data) => {
                 data.bookTypeList.unshift({
+                    bookType:"NULL"
+                });
+                data.bookTypeList.unshift({
                     bookType:"全部"
                 });
                 this.bookTypeList = data.bookTypeList;
@@ -549,13 +583,34 @@ export default {
                 console.error("err");
             });
         },
+        onClickSelect(selection){       //check选择框选中
+            this.selection = selection;
+        },
         onClickUpdateBookisJin(bookId, isJin, bookName) {
             let obj = {
-                params: {
-                    bookId: bookId,
-                    isJin: isJin
+
+            }
+            if(!isJin) {
+                let bookIds = [];   //批量
+                this.selection.forEach((value, index) => {
+                    bookIds.push(value.id);
+                });
+                obj = {
+                    params:{
+                        bookIds:bookIds.join(','),
+                        isJin:1
+                    }
+                }
+            } else {
+                obj = {
+                    params: {
+                        bookId: bookId,
+                        isJin: isJin
+                    }
                 }
             }
+
+
             this.loading = true;
 
             util.post.books.updateBookIsJin(obj).then((data) => {
@@ -650,6 +705,11 @@ export default {
                     set = null;
                 },300);
             }
+        },
+        showEdit(book){
+            // console.log(book);
+            // this.editStatus.status = true;
+            this.$refs.edit.$emit("editBook",book)
         }
     },
     created() {
